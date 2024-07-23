@@ -52,7 +52,7 @@ func mysqlPing() {
 
 func ginRouter() {
 	router := gin.Default()
-	router.GET("/albums", getAlboms)
+	router.GET("/users", getUsers)
 
 	// router.POST("/albums", postAlbums)
 
@@ -61,23 +61,21 @@ func ginRouter() {
 }
 
 // album represents data about a record album.
-// type album struct {
-// 	ID     string  `json:"id"`
-// 	Title  string  `json:"title"`
-// 	Artist string  `json:"artist"`
-// 	Price  float64 `json:"price"`
-// }
+type user struct {
+	Id    string `json:"id"`
+	Email string `json:"email"`
+	Start int    `json:"start"`
+}
 
 // // albums slice to seed record album data.
-// var albums = []album{
-// 	{ID: "1", Title: "Blue Train", Artist: "John Coltrane", Price: 56.99},
-// 	{ID: "2", Title: "Jeru", Artist: "Gerry Mulligan", Price: 17.99},
-// 	{ID: "3", Title: "Sarah Vaughan and Clifford Brown", Artist: "Sarah Vaughan", Price: 39.99},
-// }
+var users = []user{
+	{Id: "1", Email: "test@test", Start: 11},
+	{Id: "2", Email: "2@test", Start: 22},
+}
 
-func getAlboms(c *gin.Context) {
+func getUsers(c *gin.Context) {
 
-	c.IndentedJSON(http.StatusOK, "alboms handler content")
+	c.JSON(http.StatusOK, users)
 }
 
 func main() {
