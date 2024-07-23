@@ -4,8 +4,10 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 
+	"github.com/gin-gonic/gin"
 	"github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
 )
@@ -35,6 +37,8 @@ func setMysql() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Println("mysql connected.")
 }
 
 func mysqlPing() {
@@ -42,6 +46,38 @@ func mysqlPing() {
 	if pingErr != nil {
 		log.Fatal(pingErr)
 	}
+
+	fmt.Println("mysql ping ok.")
+}
+
+func ginRouter() {
+	router := gin.Default()
+	router.GET("/albums", getAlboms)
+
+	// router.POST("/albums", postAlbums)
+
+	router.Run(os.Getenv("SERVER"))
+
+}
+
+// album represents data about a record album.
+// type album struct {
+// 	ID     string  `json:"id"`
+// 	Title  string  `json:"title"`
+// 	Artist string  `json:"artist"`
+// 	Price  float64 `json:"price"`
+// }
+
+// // albums slice to seed record album data.
+// var albums = []album{
+// 	{ID: "1", Title: "Blue Train", Artist: "John Coltrane", Price: 56.99},
+// 	{ID: "2", Title: "Jeru", Artist: "Gerry Mulligan", Price: 17.99},
+// 	{ID: "3", Title: "Sarah Vaughan and Clifford Brown", Artist: "Sarah Vaughan", Price: 39.99},
+// }
+
+func getAlboms(c *gin.Context) {
+
+	c.IndentedJSON(http.StatusOK, "alboms handler content")
 }
 
 func main() {
@@ -52,5 +88,5 @@ func main() {
 
 	mysqlPing() // проверка подключения
 
-	fmt.Println("Connected!")
+	ginRouter() // запустить сервер
 }
