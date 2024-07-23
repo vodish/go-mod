@@ -53,6 +53,7 @@ func mysqlPing() {
 func ginRouter() {
 
 	router := gin.Default()
+	router.GET("/test", getTest)
 	router.GET("/users", getUsers)
 	// router.POST("/albums", postAlbums)
 
@@ -72,8 +73,12 @@ var users = []user{
 	{Id: "2", Email: "2@test", Start: 22},
 }
 
-func getUsers(c *gin.Context) {
+func getTest(c *gin.Context) {
+	c.JSON(200, gin.H{"str": "строка", "int": 200})
+}
 
+func getUsers(c *gin.Context) {
+	fmt.Println("Первый обработчик")
 	c.JSON(http.StatusOK, users)
 }
 
