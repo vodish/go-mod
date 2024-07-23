@@ -13,12 +13,13 @@ import (
 var db *sql.DB
 var err error
 
-func main() {
-	// переменные окружения из файла .env
+func setEnv() {
 	if godotenv.Load("../.env") != nil {
 		log.Fatal("Did not exist file ../.env")
 	}
+}
 
+func setMysql() {
 	// Capture connection properties.
 	cfg := mysql.Config{
 		User:                 os.Getenv("DBUSER"),
@@ -34,11 +35,22 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
 
+func mysqlPing() {
 	pingErr := db.Ping()
 	if pingErr != nil {
 		log.Fatal(pingErr)
 	}
+}
+
+func main() {
+
+	setEnv() // переменные окружения из файла .env
+
+	setMysql() // подключиться к mysql
+
+	mysqlPing() // проверка подключения
 
 	fmt.Println("Connected!")
 }
