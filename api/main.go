@@ -14,7 +14,7 @@ var db *sql.DB
 var err error
 
 func main() {
-	// подключить и прочитать .env
+	// переменные окружения из файла .env
 	if godotenv.Load("../.env") != nil {
 		log.Fatal("Did not exist file ../.env")
 	}
@@ -25,7 +25,7 @@ func main() {
 		Passwd:               os.Getenv("DBPASS"),
 		Net:                  "tcp",
 		Addr:                 os.Getenv("DBHOST"),
-		DBName:               "taris",
+		DBName:               os.Getenv("DBNAME"),
 		AllowNativePasswords: true,
 	}
 
