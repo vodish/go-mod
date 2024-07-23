@@ -51,13 +51,12 @@ func mysqlPing() {
 }
 
 func ginRouter() {
+
 	router := gin.Default()
 	router.GET("/users", getUsers)
-
 	// router.POST("/albums", postAlbums)
 
 	router.Run(os.Getenv("SERVER"))
-
 }
 
 // album represents data about a record album.
@@ -80,11 +79,8 @@ func getUsers(c *gin.Context) {
 
 func main() {
 
-	setEnv() // переменные окружения из файла .env
-
-	setMysql() // подключиться к mysql
-
+	setEnv()    // переменные окружения из файла .env
+	setMysql()  // подключиться к mysql
 	mysqlPing() // проверка подключения
-
 	ginRouter() // запустить сервер
 }
