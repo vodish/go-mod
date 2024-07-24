@@ -67,7 +67,7 @@ func getTest(c *gin.Context) {
 
 // album represents data about a record album.
 type User struct {
-	Id    string `json:"id"`
+	Id    int    `json:"id"`
 	Email string `json:"email"`
 	Start int    `json:"start"`
 }
@@ -75,8 +75,8 @@ type User struct {
 func getUsersX(c *gin.Context) {
 	var users []User
 
-	sql := "SELECT *  FROM user  LIMIT 1"
-	err := dbx.Select(&users, sql)
+	sql := `SELECT *  FROM user  WHERE id = ?`
+	err := dbx.Select(&users, sql, 2)
 	if err != nil {
 		fmt.Println("err", err)
 	}
@@ -102,6 +102,7 @@ func getUsersX(c *gin.Context) {
 
 func getUsers(c *gin.Context) {
 	var err error
+	var users []User
 
 	rows, err := dbx.NamedQuery(`
 		SELECT
@@ -115,19 +116,21 @@ func getUsers(c *gin.Context) {
 			"email": "site@taris.pro",
 		})
 
+	for rows.Next() {
+		var user User
+		err = rows.StructScan(&user)
+		users = append(users, user)
+	}
 	defer rows.Close()
 
 	if err != nil {
-		c.JSON(400, gin.H{"error": err})
+		fmt.Println("err", err)
+		// c.JSON(400, gin.H{"error": err})
 	}
 
-	var user User
-	err = dbx.Get(&user, "SELECT *  FROM user  WHERE email = ?", "site@taris.pro")
-	if err != nil {
-		c.JSON(400, gin.H{"error rows next": err})
-	}
+	fmt.Println("rows", users)
 
-	c.JSON(http.StatusOK, user)
+	c.JSON(http.StatusOK, users)
 }
 
 func main() {
