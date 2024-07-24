@@ -54,8 +54,9 @@ func ginRouter() {
 
 	router := gin.Default()
 	router.GET("/test", getTest)
-	router.GET("/usersx", getUsersX)
-	router.GET("/users", getUsers)
+	router.GET("/users", getUserList)
+	router.GET("/users/:email", getUserOne)
+	router.GET("/usersn", getUsersN)
 	// router.POST("/albums", postAlbums)
 
 	router.Run(os.Getenv("SERVER"))
@@ -72,36 +73,43 @@ type User struct {
 	Start int    `json:"start"`
 }
 
-func getUsersX(c *gin.Context) {
+// список пользователей
+func getUserList(c *gin.Context) {
 	var users []User
 
-	sql := `SELECT *  FROM user  WHERE id = ?`
-	err := dbx.Select(&users, sql, 2)
+	sql := `SELECT *  FROM user`
+
+	err := dbx.Select(&users, sql)
+
 	if err != nil {
 		fmt.Println("err", err)
 	}
 
-	fmt.Println("users", users)
-
-	// var users []User
-
-	// for rows.Next() {
-	// 	var user User
-	// 	if err := rows.Scan(&user.id, &user.email, &user.start); err != nil {
-	// 		c.JSON(400, gin.H{"error": err})
-	// 	}
-	// 	users = append(users, user)
-	// }
-
-	// if err := rows.Err(); err != nil {
-	// 	c.JSON(500, gin.H{"error": err})
-	// }
-
 	c.JSON(http.StatusOK, users)
 }
 
-func getUsers(c *gin.Context) {
-	var err error
+// один пользователь
+func getUserOne(c *gin.Context) {
+	var user User
+
+	sql := `SELECT *  FROM user  WHERE email = ?`
+
+	email := c.Param("email")
+	err := dbx.Get(&user, sql, email)
+
+	if err != nil {
+		fmt.Println("err", err)
+	}
+	if user.Id == 0 {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"err": "data is not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
+}
+
+func getUsersN(c *gin.Context) {
+	var user User
 	var users []User
 
 	rows, err := dbx.NamedQuery(`
@@ -117,18 +125,15 @@ func getUsers(c *gin.Context) {
 		})
 
 	for rows.Next() {
-		var user User
-		err = rows.StructScan(&user)
+		rows.StructScan(&user)
 		users = append(users, user)
 	}
 	defer rows.Close()
 
 	if err != nil {
 		fmt.Println("err", err)
-		// c.JSON(400, gin.H{"error": err})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
 	}
-
-	fmt.Println("rows", users)
 
 	c.JSON(http.StatusOK, users)
 }
