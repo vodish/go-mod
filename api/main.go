@@ -41,14 +41,14 @@ func setMysql() {
 	fmt.Println("mysql sqlx connected.")
 }
 
-func mysqlPing() {
-	pingErr := dbx.Ping()
-	if pingErr != nil {
-		log.Fatal(pingErr)
-	}
+// func mysqlPing() {
+// 	pingErr := dbx.Ping()
+// 	if pingErr != nil {
+// 		log.Fatal(pingErr)
+// 	}
 
-	fmt.Println("mysql ping ok.")
-}
+// 	fmt.Println("mysql ping ok.")
+// }
 
 func ginRouter() {
 
@@ -83,6 +83,8 @@ func getUserList(c *gin.Context) {
 
 	if err != nil {
 		fmt.Println("err", err)
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"err": "data is not found from getUserList"})
+		return
 	}
 
 	c.JSON(http.StatusOK, users)
@@ -101,7 +103,7 @@ func getUserOne(c *gin.Context) {
 		fmt.Println("err", err)
 	}
 	if user.Id == 0 {
-		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"err": "data is not found"})
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"err": "data is not found from getUserOne"})
 		return
 	}
 
@@ -140,8 +142,8 @@ func getUsersN(c *gin.Context) {
 
 func main() {
 
-	setEnv()    // переменные окружения из файла .env
-	setMysql()  // подключиться к mysql
-	mysqlPing() // проверка подключения
+	setEnv()   // переменные окружения из файла .env
+	setMysql() // подключиться к mysql
+	// mysqlPing() // проверка подключения
 	ginRouter() // запустить сервер
 }
