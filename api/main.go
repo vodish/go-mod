@@ -56,7 +56,7 @@ func ginRouter() {
 	router.GET("/test", hTest)
 	router.GET("/users", hUserList)
 	router.GET("/users/:email", hUserOne)
-	router.GET("/usersn", hUsersN)
+	router.GET("/usersn", hUsersParamName)
 	// router.POST("/albums", postAlbums)
 
 	router.Run(os.Getenv("SERVER"))
@@ -110,7 +110,7 @@ func hUserOne(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
-func hUsersN(c *gin.Context) {
+func hUsersParamName(c *gin.Context) {
 	var user User
 	var users []User
 
@@ -121,6 +121,8 @@ func hUsersN(c *gin.Context) {
 			user
 		WHERE
 			email = :email
+		LIMIT
+			3
 		`,
 		map[string]interface{}{
 			"email": "site@taris.pro",
