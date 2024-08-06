@@ -55,7 +55,7 @@ func ginRouter() {
 	router := gin.Default()
 	router.GET("/test", test)
 	router.GET("/users", userList)
-	router.GET("/users/:email", userOne)
+	router.GET("/users/:email", userEmail)
 	router.GET("/usersn", usersParamName)
 	// router.POST("/albums", postAlbums)
 
@@ -91,7 +91,7 @@ func userList(c *gin.Context) {
 }
 
 // один пользователь
-func userOne(c *gin.Context) {
+func userEmail(c *gin.Context) {
 	var user User
 
 	sql := `SELECT *  FROM user  WHERE email = ?`
@@ -103,7 +103,7 @@ func userOne(c *gin.Context) {
 		fmt.Println("err", err)
 	}
 	if user.Id == 0 {
-		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"err": "data is not found from getUserOne"})
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"err": "data is not found from userEmail"})
 		return
 	}
 
