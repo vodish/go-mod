@@ -53,16 +53,16 @@ func setMysql() {
 func ginRouter() {
 
 	router := gin.Default()
-	router.GET("/test", hTest)
-	router.GET("/users", hUserList)
-	router.GET("/users/:email", hUserOne)
-	router.GET("/usersn", hUsersParamName)
+	router.GET("/test", test)
+	router.GET("/users", userList)
+	router.GET("/users/:email", userOne)
+	router.GET("/usersn", usersParamName)
 	// router.POST("/albums", postAlbums)
 
 	router.Run(os.Getenv("SERVER"))
 }
 
-func hTest(c *gin.Context) {
+func test(c *gin.Context) {
 	c.JSON(200, gin.H{"str": "строка", "int": 200})
 }
 
@@ -74,7 +74,7 @@ type User struct {
 }
 
 // список пользователей
-func hUserList(c *gin.Context) {
+func userList(c *gin.Context) {
 	var users []User
 
 	sql := `SELECT *  FROM user`
@@ -91,7 +91,7 @@ func hUserList(c *gin.Context) {
 }
 
 // один пользователь
-func hUserOne(c *gin.Context) {
+func userOne(c *gin.Context) {
 	var user User
 
 	sql := `SELECT *  FROM user  WHERE email = ?`
@@ -110,7 +110,7 @@ func hUserOne(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
-func hUsersParamName(c *gin.Context) {
+func usersParamName(c *gin.Context) {
 	var user User
 	var users []User
 
