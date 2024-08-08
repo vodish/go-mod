@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-sql-driver/mysql"
@@ -63,6 +64,12 @@ func ginRouter() {
 }
 
 func test(c *gin.Context) {
+
+	go func() {
+		time.Sleep(time.Second * 5)
+		fmt.Println("Goroutine works!")
+	}()
+
 	c.JSON(200, gin.H{"str": "строка", "int": 200})
 }
 
