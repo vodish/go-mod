@@ -42,14 +42,18 @@ func setMysql() {
 	fmt.Println("mysql sqlx connected.")
 }
 
-// func mysqlPing() {
-// 	pingErr := dbx.Ping()
-// 	if pingErr != nil {
-// 		log.Fatal(pingErr)
-// 	}
+func mysqlPing(mess string) {
+	pingErr := dbx.Ping()
+	if pingErr != nil {
+		log.Fatal(pingErr)
+	}
 
-// 	fmt.Println("mysql ping ok.")
-// }
+	if mess == "" {
+		mess = "mysql ping ok."
+	}
+
+	fmt.Println(mess)
+}
 
 func ginRouter() {
 
@@ -68,6 +72,9 @@ func test(c *gin.Context) {
 	go func() {
 		time.Sleep(time.Second * 5)
 		fmt.Println("Goroutine works!")
+
+		// проверка подключения из готутины
+		mysqlPing("Проверка внешних к горутине переменных.\nПодключение к mysql работает!")
 	}()
 
 	c.JSON(200, gin.H{"str": "строка", "int": 200})
