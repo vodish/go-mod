@@ -71,10 +71,9 @@ func test(c *gin.Context) {
 
 	go func() {
 		time.Sleep(time.Second * 5)
-		fmt.Println("Goroutine works!")
 
-		// проверка подключения из готутины
-		mysqlPing("Проверка внешних к горутине переменных.\nПодключение к mysql работает!")
+		fmt.Println("Goroutine works!")
+		mysqlPing("Подключение к mysql работает!")
 	}()
 
 	c.JSON(200, gin.H{"str": "строка", "int": 200})
