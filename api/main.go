@@ -158,8 +158,8 @@ func usersParamName(c *gin.Context) {
 
 func main() {
 
-	setEnv()   // переменные окружения из файла .env
-	setMysql() // подключиться к mysql
-	// mysqlPing() // проверка подключения
-	ginRouter() // запустить сервер
+	setEnv()      // переменные окружения из файла .env
+	setMysql()    // подключиться к mysql
+	mysqlPing("") // проверка подключения
+	ginRouter()   // запустить сервер
 }
